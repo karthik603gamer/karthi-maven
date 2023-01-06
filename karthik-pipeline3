@@ -1,0 +1,21 @@
+node ('karthik-node')
+{
+    properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '5')), pipelineTriggers([pollSCM('H/2 * * * *')])])
+    def maven = tool name : "karthik-maven1"
+    stage ('cloning the sorce code ')
+    {
+        git branch: 'main', credentialsId: '88692b91-12a9-46b5-811b-2ba97f3323a4', url: 'https://github.com/karthik603gamer/karthi-maven.git'
+    }
+    stage ('build the sorce code')
+    {
+        sh "${maven}/bin/mvn clean package"
+    }
+    stage ('save the packages into local server')
+    {
+        sh "${maven}/bin/mvn install"
+    }
+    stage ('delploy to tomcat server')
+    {
+        deploy adapters: [tomcat9(credentialsId: 'b5c921e6-cefe-403b-938e-3d2760be55e8', path: '', url: 'http://3.110.115.185:8080/')], contextPath: 'karthik', war: '**/*.war'
+    }
+}
