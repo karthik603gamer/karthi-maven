@@ -14,8 +14,4 @@ node ('karthik-node')
     {
         sh "${maven}/bin/mvn install"
     }
-    stage ('delploy to tomcat server')
-    {
-        deploy adapters: [tomcat9(credentialsId: 'b5c921e6-cefe-403b-938e-3d2760be55e8', path: '', url: 'http://3.110.115.185:8080/')], contextPath: 'karthik', war: '**/*.war'
-    }
 }
